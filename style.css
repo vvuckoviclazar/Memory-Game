@@ -70,3 +70,28 @@ button:hover {
   transform: scale(1.2);
   background-color: blue;
 }
+
+.middle {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  width: 385px;
+  height: 340px;
+  margin: 0 auto;
+}
+
+.grid-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  transition: outline 0.2s ease;
+  border-radius: 10rem;
+}
