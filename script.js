@@ -1,25 +1,22 @@
 "use strict";
 
-const easyBtn = document.querySelector(".easyBtn");
-const mediumBtn = document.querySelector(".mediumBtn");
-const hardBtn = document.querySelector(".hardBtn");
 const middle = document.querySelector(".middle");
 const clickedNum = document.querySelector(".clickedNum");
 const itemsNumber = document.querySelector(".itemsNumber");
+const gridButtons = document.querySelectorAll(".gridButtons");
 
 let gridItems;
 
 function gameCreator() {
   let gridData = [];
   let number = 0;
-  let itemsNumber;
 
   const setItemsNumber = () => {
     return gridData.length;
   };
 
   const getItemsNumber = () => {
-    return itemsNumber;
+    return gridData.length;
   };
 
   const setScore = () => {
@@ -35,36 +32,33 @@ function gameCreator() {
   };
 
   const initializeGridData = (size) => {
-    gridData = Array.from({ length: size }, () => ({
-      id: crypto.randomUUID(),
-      color: generateRandomColor(),
-      isClicked: false,
-    }));
+    gridData = [];
+    for (let i = 0; i < size; i++) {
+      addSquare(squareCreator());
+    }
   };
 
   const getIsClicked = (id) => {
-    const item = gridData.find((item) => item.id === id);
-    console.log(item);
-    return item.isClicked;
+    const item = gridData.find((item) => item.getId() === id);
+    return item ? item.getIsClicked() : false;
+  };
+
+  const addSquare = (square) => {
+    gridData.push(square);
+  };
+
+  const getGridData = () => {
+    return gridData;
   };
 
   function checkWinner() {
-    const allClicked = game.getGridData().every((item) => item.isClicked);
-
+    const allClicked = gridData.every((item) => item.getIsClicked());
     if (allClicked) {
       setTimeout(() => {
         alert("You Won! All grid items clicked correctly.");
       }, 200);
     }
   }
-
-  const getGridData = () => {
-    return gridData;
-  };
-
-  const addSquare = (square) => {
-    gridData.push(square);
-  };
 
   return {
     initializeGridData,
@@ -110,7 +104,6 @@ function squareCreator() {
 }
 
 const game = gameCreator();
-const square = squareCreator();
 
 function generateRandomColor() {
   const letters = "0123456789ABCDEF";
@@ -136,6 +129,7 @@ function createGrid(rows, cols) {
 
   middle.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
   middle.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
   updateGrid();
 }
 
@@ -144,16 +138,16 @@ function handleGridClick(event) {
   if (!clickedId) return;
 
   const isClicked = game.getIsClicked(clickedId);
-  console.log(isClicked);
   if (isClicked) {
     alert("Game Over! You've clicked this square before.");
     createGrid(3, 3);
     return;
   }
+
   const currentSquare = game
     .getGridData()
-    .find((square) => square.id === clickedId);
-  currentSquare.isClicked = true;
+    .find((square) => square.getId() === clickedId);
+  currentSquare.setIsClicked(true);
   game.increaseScore();
   clickedNum.textContent = game.getScore();
   game.checkWinner();
@@ -168,35 +162,24 @@ function updateGrid() {
   game.getGridData().forEach((square) => {
     const gridItem = document.createElement("div");
     gridItem.classList.add("grid-item");
-    gridItem.style.backgroundColor = square.color;
-    gridItem.dataset.id = square.id;
+    gridItem.style.backgroundColor = square.getColor();
+    gridItem.dataset.id = square.getId();
     middle.appendChild(gridItem);
   });
+
   gridItems = middle.querySelectorAll(".grid-item");
 }
 
 middle.addEventListener("click", handleGridClick);
 
-easyBtn.addEventListener("click", (e) => {
-  createGrid(3, 3);
-  itemsNumber.textContent = game.setItemsNumber();
-  game.setScore();
-  clickedNum.textContent = game.getScore();
-});
-mediumBtn.addEventListener("click", (e) => {
-  createGrid(4, 4);
-  itemsNumber.textContent = game.setItemsNumber();
-  game.setScore();
-  clickedNum.textContent = game.getScore();
-});
-hardBtn.addEventListener("click", (e) => {
-  createGrid(5, 5);
-  itemsNumber.textContent = game.setItemsNumber();
-  game.setScore();
-  clickedNum.textContent = game.getScore();
+gridButtons.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    const size = parseInt(button.dataset.size);
+    createGrid(size, size);
+    itemsNumber.textContent = game.setItemsNumber();
+    game.setScore();
+    clickedNum.textContent = game.getScore();
+  });
 });
 
 createGrid(3, 3);
-const nekiArray = [1, 2, 3, 4, 5];
-console.log(nekiArray);
-console.log(nekiArray.length);

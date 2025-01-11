@@ -6,6 +6,7 @@ const hardBtn = document.querySelector(".hardBtn");
 const middle = document.querySelector(".middle");
 const clickedNum = document.querySelector(".clickedNum");
 const itemsNumber = document.querySelector(".itemsNumber");
+const gridButtons = document.querySelectorAll(".gridButtons");
 
 let gridItems;
 
@@ -130,7 +131,12 @@ function shuffle(array) {
 
 function createGrid(rows, cols) {
   const size = rows * cols;
-  game.initializeGridData(size);
+
+  game.initializeGridData(0);
+
+  for (let i = 0; i < size; i++) {
+    game.addSquare(squareCreator());
+  }
 
   shuffle(game.getGridData());
 
@@ -177,26 +183,14 @@ function updateGrid() {
 
 middle.addEventListener("click", handleGridClick);
 
-easyBtn.addEventListener("click", (e) => {
-  createGrid(3, 3);
-  itemsNumber.textContent = game.setItemsNumber();
-  game.setScore();
-  clickedNum.textContent = game.getScore();
-});
-mediumBtn.addEventListener("click", (e) => {
-  createGrid(4, 4);
-  itemsNumber.textContent = game.setItemsNumber();
-  game.setScore();
-  clickedNum.textContent = game.getScore();
-});
-hardBtn.addEventListener("click", (e) => {
-  createGrid(5, 5);
-  itemsNumber.textContent = game.setItemsNumber();
-  game.setScore();
-  clickedNum.textContent = game.getScore();
+gridButtons.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    const size = parseInt(button.dataset.size);
+    createGrid(size, size);
+    itemsNumber.textContent = game.setItemsNumber();
+    game.setScore();
+    clickedNum.textContent = game.getScore();
+  });
 });
 
-createGrid(3, 3);
-const nekiArray = [1, 2, 3, 4, 5];
-console.log(nekiArray);
-console.log(nekiArray.length); -->
+createGrid(3, 3); -->
