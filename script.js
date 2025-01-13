@@ -11,15 +11,11 @@ function gameCreator() {
   let gridData = [];
   let number = 0;
 
-  const setItemsNumber = () => {
-    return gridData.length;
-  };
-
   const getItemsNumber = () => {
     return gridData.length;
   };
 
-  const setScore = () => {
+  const resetScore = () => {
     number = 0;
   };
 
@@ -31,16 +27,14 @@ function gameCreator() {
     return number;
   };
 
-  const initializeGridData = (size) => {
+  const clearGridData = () => {
     gridData = [];
-    for (let i = 0; i < size; i++) {
-      addSquare(squareCreator());
-    }
+    resetScore();
   };
 
   const getIsClicked = (id) => {
     const item = gridData.find((item) => item.getId() === id);
-    return item ? item.getIsClicked() : false;
+    return item.isClicked;
   };
 
   const addSquare = (square) => {
@@ -61,16 +55,16 @@ function gameCreator() {
   }
 
   return {
-    initializeGridData,
+    clearGridData,
     getIsClicked,
-    setScore,
     increaseScore,
     getScore,
-    setItemsNumber,
+
     getItemsNumber,
     checkWinner,
     getGridData,
     addSquare,
+    resetScore,
   };
 }
 
@@ -123,7 +117,12 @@ function shuffle(array) {
 
 function createGrid(rows, cols) {
   const size = rows * cols;
-  game.initializeGridData(size);
+
+  game.clearGridData();
+
+  for (let i = 0; i < size; i++) {
+    game.addSquare(squareCreator());
+  }
 
   shuffle(game.getGridData());
 
@@ -176,8 +175,8 @@ gridButtons.forEach((button) => {
   button.addEventListener("click", (e) => {
     const size = parseInt(button.dataset.size);
     createGrid(size, size);
-    itemsNumber.textContent = game.setItemsNumber();
-    game.setScore();
+    itemsNumber.textContent = game.getItemsNumber();
+    game.resetScore();
     clickedNum.textContent = game.getScore();
   });
 });
